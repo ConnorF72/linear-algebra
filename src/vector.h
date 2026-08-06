@@ -6,6 +6,8 @@
 
 #define EPSILON 1e-9
 
+typedef double scalar_t;
+
 typedef struct {
     double x;
     double y;
@@ -40,7 +42,7 @@ Vector subtract(Vector vec1, Vector vec2);
  *
  * @return Scalar dot product
  */
-double dot(Vector vec1, Vector vec2);
+scalar_t dot(Vector vec1, Vector vec2);
 
 /*
  * @brief Computes the cross product of two vectors
@@ -59,7 +61,7 @@ Vector cross(Vector vec1, Vector vec2);
  *
  * @return Magnitude of vector
  */
-double mag(Vector vec);
+scalar_t mag(Vector vec);
 
 /*
  * @brief Finds the projection of one vector onto another.
@@ -90,7 +92,7 @@ Vector norm(Vector vec);
  *
  * @return Scaled vector
  */
-Vector scale(Vector vec, double scalar);
+Vector scale(Vector vec, scalar_t scalar);
 
 /*
  * @brief Computes the shortest distance between two vectors
@@ -100,11 +102,11 @@ Vector scale(Vector vec, double scalar);
  *
  * @return Distance between vectors
  */
-double distance(Vector vec1, Vector vec2);
+scalar_t distance(Vector vec1, Vector vec2);
 
 /*
  * @brief Determines if two vectors are orthogonal to each other.
- *        Permits a margin of error 1e-9.
+ *        Permits a margin of error of EPSILON.
  *
  * @param vec1 Vector 1
  * @param vec2 Vector 2
@@ -115,7 +117,7 @@ int are_orthogonal(Vector vec1, Vector vec2);
 
 /*
  * @brief Determines if a vector is a zero vector.
- *        Permits a margin of error 1e-9.
+ *        Permits a margin of error of EPSILON.
  *
  * @param vec Vector
  *
@@ -125,7 +127,7 @@ int is_zero(Vector vec);
 
 /*
  * @brief Determines if two vectors are parallel.
- *        Permits a margin of error 1e-9
+ *        Permits a margin of error of EPSILON.
  *
  * @param vec1 Vector 1
  * @param vec2 Vector 2
@@ -150,7 +152,7 @@ Vector input_vector(void);
  *
  * @return Angle in radians
  */
-double angle(Vector vec1, Vector vec2);
+scalar_t angle(Vector vec1, Vector vec2);
 
 /*
  * @brief Computes the scalar triple product of three vectors
@@ -161,7 +163,7 @@ double angle(Vector vec1, Vector vec2);
  *
  * @return Scalar triple product
  */
-double scalar_triple(Vector vec1, Vector vec2, Vector vec3);
+scalar_t scalar_triple(Vector vec1, Vector vec2, Vector vec3);
 
 /*
  * @brief Computes the vector triple product of three vectors

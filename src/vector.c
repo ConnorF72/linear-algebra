@@ -11,7 +11,6 @@ Brief: Functions performing fundamental vector operations
 ******************************/
 
 #include "vector.h"
-#include <math.h>
 
 Vector add(Vector vec1, Vector vec2) {
     Vector sum = {
@@ -31,7 +30,7 @@ Vector subtract(Vector vec1, Vector vec2) {
     return difference;
 }
 
-double dot(Vector vec1, Vector vec2) {
+scalar_t dot(Vector vec1, Vector vec2) {
     return (vec1.x * vec2.x) + (vec1.y * vec2.y) + (vec1.z * vec2.z);
 }
 
@@ -44,8 +43,8 @@ Vector cross(Vector vec1, Vector vec2) {
     return product;
 }
 
-double mag(Vector vec) {
-    double radicand = (vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z);
+scalar_t mag(Vector vec) {
+    scalar_t radicand = (vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z);
     return sqrt(radicand);
 }
 
@@ -55,7 +54,7 @@ Vector proj(Vector vec1, Vector vec2) {
         return err;
     }
 
-    double scalar = dot(vec1, vec2) / (mag(vec2) * mag(vec2));
+    scalar_t scalar = dot(vec1, vec2) / (mag(vec2) * mag(vec2));
 
     Vector projection = {
         .x = scalar * vec2.x,
@@ -67,7 +66,7 @@ Vector proj(Vector vec1, Vector vec2) {
 }
 
 Vector norm(Vector vec) {
-    double magnitude = mag(vec);
+    scalar_t magnitude = mag(vec);
 
     if (magnitude == 0) return (Vector){0};
 
@@ -80,7 +79,7 @@ Vector norm(Vector vec) {
     return normalized;
 }
 
-Vector scale(Vector vec, double scalar) {
+Vector scale(Vector vec, scalar_t scalar) {
     Vector scaled = {
         .x = vec.x * scalar,
         .y = vec.y * scalar,
@@ -89,8 +88,8 @@ Vector scale(Vector vec, double scalar) {
     return scaled;
 }
 
-double distance(Vector vec1, Vector vec2) {
-    double radicand =
+scalar_t distance(Vector vec1, Vector vec2) {
+    scalar_t radicand =
         (vec1.x - vec2.x) * (vec1.x - vec2.x)
       + (vec1.y - vec2.y) * (vec1.y - vec2.y)
       + (vec1.z - vec2.z) * (vec1.z - vec2.z);
@@ -119,7 +118,7 @@ int are_parallel(Vector vec1, Vector vec2) {
 Vector input_vector(void) {
     Vector input;
     int c;
-    double x, y, z;
+    scalar_t x, y, z;
 
     printf("Enter a vector <A, B, C>: ");
 
@@ -137,11 +136,11 @@ Vector input_vector(void) {
     return input;
 }
 
-double angle(Vector vec1, Vector vec2) {
+scalar_t angle(Vector vec1, Vector vec2) {
     if (mag(vec1) == 0 || mag(vec2) == 0)
         return NAN;
 
-    double phi = dot(vec1, vec2) / (mag(vec1) * mag(vec2));
+    scalar_t phi = dot(vec1, vec2) / (mag(vec1) * mag(vec2));
 
     if (phi > 1) phi = 1;
     if (phi < -1) phi = -1;
@@ -149,7 +148,7 @@ double angle(Vector vec1, Vector vec2) {
     return acos(phi);
 }
 
-double scalar_triple(Vector vec1, Vector vec2, Vector vec3) {
+scalar_t scalar_triple(Vector vec1, Vector vec2, Vector vec3) {
     return dot(vec1, cross(vec2, vec3));
 }
 
