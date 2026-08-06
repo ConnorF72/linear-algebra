@@ -1,11 +1,12 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+
 #include <time.h>
 #include "vector.h"
 
 typedef struct {
-    unsigned int num_rows;
-    unsigned int num_cols;
+    unsigned int rows;
+    unsigned int cols;
     double **data;
     int is_square;
 } Matrix;
@@ -13,19 +14,19 @@ typedef struct {
 /**
  * @brief Allocates memory to create a new matrix
  *
- * @param num_rows Number of rows to allocate
- * @param num_cols Number of columns to allocate
+ * @param rows Number of rows to allocate
+ * @param cols Number of columns to allocate
  *
  * @return Created matrix
  */
-Matrix *new_matrix(unsigned int num_rows, unsigned int num_cols);
+Matrix *matrix_create(unsigned int rows, unsigned int cols);
 
 /**
- * @brief Free up memory allocated to a matrix
+ * @brief Frees the memory allocated to a matrix
  *
- * @param *mat Matrix whose memory to free
+ * @param matrix Matrix whose memory to free
  */
-void free_matrix(Matrix *mat);
+void matrix_destroy(Matrix *matrix);
 
 /**
  * @brief Creates an identity matrix of a given size
@@ -34,47 +35,78 @@ void free_matrix(Matrix *mat);
  *
  * @return Created identity matrix
  */
-Matrix *new_identity_matrix(unsigned int size);
+Matrix *matrix_identity(unsigned int size);
 
 /**
  * @brief Creates a matrix of given size and populates it with random
  *        floating point values within a given range
  *
- * @param num_rows Number of rows in matrix
- * @param num_cols Number of columns in matrix
+ * @param rows Number of rows in matrix
+ * @param cols Number of columns in matrix
  * @param min Minimum range of random numbers
  * @param max Maximum range of random numbers
  *
  * @return Matrix with randomly generated values
  */
-Matrix *rand_matrix(unsigned int num_rows, unsigned int num_cols, double min, double max);
+Matrix *matrix_random(unsigned int rows,
+                      unsigned int cols,
+                      double min,
+                      double max);
 
 /**
  * @brief Prints the entries of a matrix to a given precision
  *
- * @param *mat Matrix to be printed to terminal
+ * @param matrix Matrix to be printed to terminal
  * @param precision Number of decimal places to print values to
  */
-void print_matrix(Matrix *mat, int precision);
+void matrix_print(const Matrix *matrix, int precision);
 
 /**
  * @brief Adds two matrices together
  *
- * @param *mat1 First matrix
- * @param *mat2 Second matrix
+ * @param lhs Left-hand matrix
+ * @param rhs Right-hand matrix
  *
  * @return Matrix with summed entries
  */
-Matrix *add_matrices(const Matrix *mat1, const Matrix *mat2);
+Matrix *matrix_add(const Matrix *lhs, const Matrix *rhs);
 
 /**
  * @brief Subtracts one matrix from another
  *
- * @param *mat1 First matrix
- * @param *mat2 Second matrix
+ * @param lhs Left-hand matrix
+ * @param rhs Right-hand matrix
  *
- * @return Matrix with substracted entries
+ * @return Matrix with subtracted entries
  */
-Matrix *subtract_matrices(const Matrix *mat1, const Matrix *mat2);
+Matrix *matrix_subtract(const Matrix *lhs, const Matrix *rhs);
+
+/**
+ * @brief Creates a copy of an existing matrix
+ *
+ * @param matrix Matrix to be copied
+ *
+ * @return Copy of given matrix
+ */
+Matrix *matrix_copy(const Matrix *matrix);
+
+/**
+ * @brief Creates the transpose of a given matrix
+ *
+ * @param matrix Matrix to be transposed
+ *
+ * @return Transpose of original matrix
+ */
+Matrix *matrix_transpose(const Matrix *matrix);
+
+/**
+ * @brief Multiplies two matrices
+ *
+ * @param lhs Left-hand matrix
+ * @param rhs Right-hand matrix
+ *
+ * @return Product of the two matrices
+ */
+Matrix *matrix_multiply(const Matrix *lhs, const Matrix *rhs);
 
 #endif

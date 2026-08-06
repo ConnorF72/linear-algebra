@@ -1,5 +1,4 @@
-/*****************************
-
+/****************************************
 File: matrix.c
 
 Author: Connor Fletcher
@@ -8,96 +7,132 @@ Date: August 5, 2026
 
 Brief: A collection of functions for performing matrix operations
 
- *****************************/
+****************************************/
 
 #include "matrix.h"
 
-Matrix *new_matrix(unsigned int num_rows, unsigned int num_cols) {
-    if (num_rows == 0 || num_cols == 0) {
+Matrix *matrix_create(unsigned int rows, unsigned int cols) {
+    if (rows == 0 || cols == 0) {
         return NULL;
     }
 
-    Matrix *m = calloc(1, sizeof(*m));
+    Matrix *matrix = calloc(1, sizeof(*matrix));
 
-    m->num_rows = num_rows;
-    m->num_cols = num_cols;
-    m->is_square = (num_rows == num_cols) ? 1 : 0;
+    matrix->rows = rows;
+    matrix->cols = cols;
+    matrix->is_square = (rows == cols) ? 1 : 0;
 
-    m->data = calloc(m->num_rows, sizeof(*m->data));
+    matrix->data = calloc(matrix->rows, sizeof(*matrix->data));
 
-    for (int i = 0; i < m->num_rows; i++) {
-        m->data[i] = calloc(m->num_cols, sizeof(**m->data));
+    for (int row = 0; row < matrix->rows; row++) {
+        matrix->data[row] = calloc(matrix->cols, sizeof(**matrix->data));
     }
 
-    return m;
+    return matrix;
 }
 
-void free_matrix(Matrix *m) {
-    if (m == NULL) return;
+void matrix_destroy(Matrix *matrix) {
+    if (matrix == NULL) return;
 
-    for (int i = 0; i < m->num_rows; i++) {
-        free(m->data[i]);
+    for (int row = 0; row < matrix->rows; row++) {
+        free(matrix->data[row]);
     }
 
-    free(m->data);
+    free(matrix->data);
 
-    free(m);
+    free(matrix);
 }
 
-Matrix *new_identity_matrix(unsigned int size) {
-    Matrix *m = new_matrix(size, size);
-    if (m == NULL) return NULL;
+Matrix *matrix_identity(unsigned int size) {
+    Matrix *matrix = matrix_create(size, size);
+    if (matrix == NULL) return NULL;
 
-    for (int i = 0; i < m->num_rows; i++) {
-        m->data[i][i] = 1.0;
+    for (int row = 0; row < matrix->rows; row++) {
+        matrix->data[row][row] = 1.0;
     }
-    return m;
+
+    return matrix;
 }
 
-Matrix *rand_matrix(unsigned int num_rows, unsigned int num_cols, double min, double max) {
+Matrix *matrix_random(unsigned int rows, unsigned int cols, double min, double max) {
 
-    Matrix *m = new_matrix(num_rows, num_cols);
-    for (int i = 0; i < m->num_rows; i++) {
-        for (int j = 0; j < m-> num_cols; j++) {
-            m->data[i][j] = rand_double(min, max);
+    Matrix *matrix = matrix_create(rows, cols);
+
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int col = 0; col < matrix->cols; col++) {
+            matrix->data[row][col] = rand_double(min, max);
         }
     }
-    return m;
+
+    return matrix;
 }
 
-void print_matrix(Matrix *mat, int precision) {
-    for (int i = 0; i < mat->num_rows; i++) {
-        for (int j = 0; j < mat->num_cols; j++) {
-            printf("%.*lf\t", precision, mat->data[i][j]);
+void matrix_print(const Matrix *matrix, int precision) {
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int col = 0; col < matrix->cols; col++) {
+            printf("%.*lf\t", precision, matrix->data[row][col]);
         }
         printf("\n");
     }
 }
 
-Matrix *add_matrices(const Matrix *mat1, const Matrix *mat2){
-    if (mat1 == NULL || mat2 == NULL) return NULL;
-    if (mat1->num_rows != mat2->num_rows || mat1->num_cols != mat2->num_cols) return NULL;
+Matrix *matrix_add(const Matrix *lhs, const Matrix *rhs) {
+    if (lhs == NULL || rhs == NULL) return NULL;
+    if (lhs->rows != rhs->rows || lhs->cols != rhs->cols) return NULL;
 
-    Matrix *m = new_matrix(mat1->num_rows, mat1->num_cols);
+    Matrix *result = matrix_create(lhs->rows, lhs->cols);
 
-    for (int i = 0; i < m->num_rows; i++) {
-        for (int j = 0; j < m->num_cols; j++) {
-            m->data[i][j] = mat1->data[i][j] + mat2->data[i][j];
+    for (int row = 0; row < result->rows; row++) {
+        for (int col = 0; col < result->cols; col++) {
+            result->data[row][col] = lhs->data[row][col] + rhs->data[row][col];
         }
     }
-    return m;
+
+    return result;
 }
 
-Matrix *subtract_matrices(const Matrix *mat1, const Matrix *mat2){
-    if (mat1 == NULL || mat2 == NULL) return NULL;
-    if (mat1->num_rows != mat2->num_rows || mat1->num_cols != mat2->num_cols) return NULL;
+Matrix *matrix_subtract(const Matrix *lhs, const Matrix *rhs) {
+    if (lhs == NULL || rhs == NULL) return NULL;
+    if (lhs->rows != rhs->rows || lhs->cols != rhs->cols) return NULL;
 
-    Matrix *m = new_matrix(mat1->num_rows, mat1->num_cols);
+    Matrix *result = matrix_create(lhs->rows, lhs->cols);
 
-    for (int i = 0; i < m->num_rows; i++) {
-        for (int j = 0; j < m->num_cols; j++) {
-            m->data[i][j] = mat1->data[i][j] - mat2->data[i][j];
+    for (int row = 0; row < result->rows; row++) {
+        for (int col = 0; col < result->cols; col++) {
+            result->data[row][col] = lhs->data[row][col] - rhs->data[row][col];
         }
     }
-    return m;
+
+    return result;
+}
+
+Matrix *matrix_copy(const Matrix *matrix) {
+    Matrix *copy = matrix_create(matrix->rows, matrix->cols);
+
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int col = 0; col < matrix->cols; col++) {
+            copy->data[row][col] = matrix->data[row][col];
+        }
+    }
+
+    return copy;
+}
+
+Matrix *matrix_transpose(const Matrix *matrix) {
+    Matrix *transpose = matrix_create(matrix->cols, matrix->rows);
+
+    for (int row = 0; row < transpose->rows; row++) {
+        for (int col = 0; col < transpose->cols; col++) {
+            transpose->data[row][col] = matrix->data[col][row];
+        }
+    }
+
+    return transpose;
+}
+
+Matrix *matrix_multiply(const Matrix *lhs, const Matrix *rhs) {
+    Matrix *product = matrix_create(lhs->rows, rhs->cols);
+
+
+    return product;
 }
