@@ -1,10 +1,10 @@
 #ifndef VECTORS_H
 #define VECTORS_H
+#define EPSILON 1e-9
 
 #include <stdio.h>
 #include <math.h>
-
-#define EPSILON 1e-9
+#include <stdlib.h>
 
 typedef double scalar_t;
 
@@ -14,7 +14,7 @@ typedef struct {
     double z;
 } Vector;
 
-/*
+/**
  * @brief Adds two vectors component-wise
  *
  * @param vec1 Vector 1
@@ -24,7 +24,7 @@ typedef struct {
  */
 Vector add(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Subtracts two vectors component-wise
  *
  * @param vec1 Vector 1
@@ -34,7 +34,7 @@ Vector add(Vector vec1, Vector vec2);
  */
 Vector subtract(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Computes the dot product of two vectors
  *
  * @param vec1 Vector 1
@@ -44,7 +44,7 @@ Vector subtract(Vector vec1, Vector vec2);
  */
 scalar_t dot(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Computes the cross product of two vectors
  *
  * @param vec1 Vector 1
@@ -54,7 +54,7 @@ scalar_t dot(Vector vec1, Vector vec2);
  */
 Vector cross(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Computes the magnitude of a vector
  *
  * @param vec Vector whose magnitude is computed
@@ -63,7 +63,7 @@ Vector cross(Vector vec1, Vector vec2);
  */
 scalar_t mag(Vector vec);
 
-/*
+/**
  * @brief Finds the projection of one vector onto another.
  *        Returns the zero vector if either input is zero.
  *
@@ -74,7 +74,7 @@ scalar_t mag(Vector vec);
  */
 Vector proj(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Normalizes a vector.
  *        Returns zero vector if magnitude is zero.
  *
@@ -84,7 +84,7 @@ Vector proj(Vector vec1, Vector vec2);
  */
 Vector norm(Vector vec);
 
-/*
+/**
  * @brief Scales a vector by a given value
  *
  * @param vec Vector to be scaled
@@ -94,7 +94,7 @@ Vector norm(Vector vec);
  */
 Vector scale(Vector vec, scalar_t scalar);
 
-/*
+/**
  * @brief Computes the shortest distance between two vectors
  *
  * @param vec1 Vector 1
@@ -104,7 +104,7 @@ Vector scale(Vector vec, scalar_t scalar);
  */
 scalar_t distance(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Determines if two vectors are orthogonal to each other.
  *        Permits a margin of error of EPSILON.
  *
@@ -115,7 +115,7 @@ scalar_t distance(Vector vec1, Vector vec2);
  */
 int are_orthogonal(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Determines if a vector is a zero vector.
  *        Permits a margin of error of EPSILON.
  *
@@ -125,7 +125,7 @@ int are_orthogonal(Vector vec1, Vector vec2);
  */
 int is_zero(Vector vec);
 
-/*
+/**
  * @brief Determines if two vectors are parallel.
  *        Permits a margin of error of EPSILON.
  *
@@ -136,7 +136,7 @@ int is_zero(Vector vec);
  */
 int are_parallel(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Takes comma-separated user input, and checks if correct number of arguments are passed.
  *        Repeatedly asks user for input until a valid 3D vector is entered.
  *
@@ -144,7 +144,7 @@ int are_parallel(Vector vec1, Vector vec2);
  */
 Vector input_vector(void);
 
-/*
+/**
  * @brief Computes the angle in radians between two vectors
  *
  * @param vec1 Vector 1
@@ -154,7 +154,7 @@ Vector input_vector(void);
  */
 scalar_t angle(Vector vec1, Vector vec2);
 
-/*
+/**
  * @brief Computes the scalar triple product of three vectors
  *
  * @param vec1 Vector 1
@@ -165,7 +165,7 @@ scalar_t angle(Vector vec1, Vector vec2);
  */
 scalar_t scalar_triple(Vector vec1, Vector vec2, Vector vec3);
 
-/*
+/**
  * @brief Computes the vector triple product of three vectors
  *
  * @param vec1 Vector 1
@@ -175,5 +175,15 @@ scalar_t scalar_triple(Vector vec1, Vector vec2, Vector vec3);
  * @return Vector triple product
  */
 Vector vector_triple(Vector vec1, Vector vec2, Vector vec3);
+
+/**
+ * @brief Generates a random floating point number within a given range
+ *
+ * @param min Minimum value in range
+ * @param max Maximum value in range
+ *
+ * @return Random floating point value
+ */
+double rand_double(double min, double max);
 
 #endif

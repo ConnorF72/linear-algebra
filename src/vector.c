@@ -155,3 +155,7 @@ scalar_t scalar_triple(Vector vec1, Vector vec2, Vector vec3) {
 Vector vector_triple(Vector vec1, Vector vec2, Vector vec3) {
     return cross(vec1, cross(vec2, vec3));
 }
+
+double rand_double(double min, double max) {
+    return min + ((double)rand() / RAND_MAX) * (max - min);
+}
