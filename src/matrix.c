@@ -1,4 +1,5 @@
 /****************************************
+
 File: matrix.c
 
 Author: Connor Fletcher
@@ -72,7 +73,7 @@ void matrix_print(const Matrix *matrix, int precision) {
         for (int col = 0; col < matrix->cols; col++) {
             printf("%.*lf\t", precision, matrix->data[row][col]);
         }
-        printf("\n");
+        printf("\n\n\n");
     }
 }
 
@@ -131,8 +132,16 @@ Matrix *matrix_transpose(const Matrix *matrix) {
 }
 
 Matrix *matrix_multiply(const Matrix *lhs, const Matrix *rhs) {
+    if (lhs->cols != rhs->rows) return NULL;
     Matrix *product = matrix_create(lhs->rows, rhs->cols);
 
-
+    for (int i = 0; i < lhs->rows; i++) {
+        for (int j = 0; j < rhs->cols; j++) {
+            product->data[i][j] = 0;
+            for (int k = 0; k < lhs->cols; k++) {
+                product->data[i][j] += lhs->data[i][k] * rhs->data[k][j];
+            }
+        }
+    }
     return product;
 }

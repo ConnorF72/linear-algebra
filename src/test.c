@@ -12,30 +12,28 @@ int main(void) {
 
     srand(time(NULL));
 
-    Matrix *square = matrix_random(3, 3, MIN, MAX);
+    /*
+    Matrix *matrix1 = matrix_random(3, 3, MIN, MAX);
+    Matrix *matrix2 = matrix_random(3, 3, MIN, MAX);
 
-    printf("\n======== SQUARE MATRIX ========\n\n");
-    matrix_print(square, 0);
+    printf("\n======== MATRIX 1 ========\n\n");
+    matrix_print(matrix1, 6);
 
-    Matrix *square_transpose = matrix_transpose(square);
+    printf("\n======== MATRIX 2 ========\n\n");
+    matrix_print(matrix2, 6);
 
-    printf("\n======== TRANSPOSE ========\n\n");
-    matrix_print(square_transpose, 0);
+    Matrix *product = matrix_multiply(matrix1, matrix2);
 
-    Matrix *rectangular = matrix_random(2, 3, MIN, MAX);
+    printf("\n======== PRODUCT ========\n\n");
+    matrix_print(product, 6);
 
-    printf("\n======== 2 x 3 MATRIX ========\n\n");
-    matrix_print(rectangular, 0);
 
-    Matrix *rectangular_transpose = matrix_transpose(rectangular);
+    matrix_destroy(matrix1);
+    matrix_destroy(matrix2);
+    matrix_destroy(product);
+*/
 
-    printf("\n======== TRANSPOSE ========\n\n");
-    matrix_print(rectangular_transpose, 0);
-
-    matrix_destroy(square);
-    matrix_destroy(square_transpose);
-    matrix_destroy(rectangular);
-    matrix_destroy(rectangular_transpose);
-
+    Matrix *i = matrix_identity(5);
+    matrix_print(i, 0);
     return 0;
 }
