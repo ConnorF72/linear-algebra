@@ -222,8 +222,9 @@ scalar_t distance(const Vector *vec1, const Vector *vec2) {
     return sqrt(distance_squared);
 }
 
+// for now built as if I will pass appropriate number of values
 void vector_set(Vector *vector, const scalar_t *values) {
     for (int i = 0; i < vector->size; i++) {
-        vector->data[i] = values[i]; // to do: consider what to do if wrong number of values passed
+        vector->data[i] = values[i];
     }
 }

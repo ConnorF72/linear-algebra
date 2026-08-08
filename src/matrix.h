@@ -8,7 +8,7 @@ typedef struct {
     unsigned int rows;
     unsigned int cols;
     double **data;
-    int is_square;
+    bool is_square;
 } Matrix;
 
 /**
@@ -35,7 +35,7 @@ void matrix_destroy(Matrix *matrix);
  *
  * @return Created identity matrix
  */
-Matrix *matrix_identity(unsigned int size);
+Matrix *eye(unsigned int size);
 
 /**
  * @brief Creates a matrix of given size and populates it with random
@@ -48,10 +48,7 @@ Matrix *matrix_identity(unsigned int size);
  *
  * @return Matrix with randomly generated values
  */
-Matrix *matrix_random(unsigned int rows,
-                      unsigned int cols,
-                      double min,
-                      double max);
+Matrix *matrix_random(unsigned int rows, unsigned int cols, scalar_t min, scalar_t max);
 
 /**
  * @brief Prints the entries of a matrix to a given precision
@@ -59,7 +56,7 @@ Matrix *matrix_random(unsigned int rows,
  * @param matrix Matrix to be printed to terminal
  * @param precision Number of decimal places to print values to
  */
-void matrix_print(const Matrix *matrix, int precision);
+void matrix_print(const Matrix *matrix, unsigned int precision);
 
 /**
  * @brief Adds two matrices together
@@ -97,7 +94,7 @@ Matrix *matrix_copy(const Matrix *matrix);
  *
  * @return Transpose of original matrix
  */
-Matrix *matrix_transpose(const Matrix *matrix);
+Matrix *transpose(const Matrix *matrix);
 
 /**
  * @brief Multiplies two matrices
@@ -109,4 +106,13 @@ Matrix *matrix_transpose(const Matrix *matrix);
  */
 Matrix *matrix_multiply(const Matrix *lhs, const Matrix *rhs);
 
+/**
+ * @brief Creates an augmented matrix
+ *
+ * @param *lhs Left hand matrix
+ * @param *rhs Right hand matrix
+ *
+ * @return Augemented matrix
+ */
+Matrix *create_augmented(const Matrix *lhs, const Matrix *rhs);
 #endif

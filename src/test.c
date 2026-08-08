@@ -12,28 +12,24 @@ int main(void) {
 
     srand(time(NULL));
 
-    /*
-    Matrix *matrix1 = matrix_random(3, 3, MIN, MAX);
-    Matrix *matrix2 = matrix_random(3, 3, MIN, MAX);
+    Matrix *matrix1 = matrix_random(3, 2, MIN, MAX);
+    Matrix *matrix2 = matrix_random(2, 3, MIN, MAX);
 
-    printf("\n======== MATRIX 1 ========\n\n");
-    matrix_print(matrix1, 6);
+    printf("\n==== MATRIX 1 ====\n\n");
+    matrix_print(matrix1, 0);
 
-    printf("\n======== MATRIX 2 ========\n\n");
-    matrix_print(matrix2, 6);
+    printf("\n==== MATRIX 2 ====\n\n");
+    matrix_print(matrix2, 0);
 
-    Matrix *product = matrix_multiply(matrix1, matrix2);
+    Matrix *aug = create_augmented(matrix1, matrix2);
 
-    printf("\n======== PRODUCT ========\n\n");
-    matrix_print(product, 6);
+    printf("\n======== AUGMENTED ========\n\n");
+    matrix_print(aug, 0);
 
 
     matrix_destroy(matrix1);
     matrix_destroy(matrix2);
-    matrix_destroy(product);
-*/
+    matrix_destroy(aug);
 
-    Matrix *i = matrix_identity(5);
-    matrix_print(i, 0);
     return 0;
 }
