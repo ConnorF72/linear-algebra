@@ -61,7 +61,7 @@ Matrix *matrix_random(unsigned int rows, unsigned int cols, double min, double m
 
     for (int row = 0; row < matrix->rows; row++) {
         for (int col = 0; col < matrix->cols; col++) {
-            matrix->data[row][col] = rand_double(min, max);
+            matrix->data[row][col] = rand_scalar(min, max);
         }
     }
 
