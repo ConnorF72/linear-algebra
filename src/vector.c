@@ -1,25 +1,36 @@
-/****************************************
-
-File: vector.c
-
-Author: Connor Fletcher
-
-Date: August 06, 2026
-
-Brief: Functions performing fundamental vector operations
-
-****************************************/
+/******************************************************************************
+ *
+ * File: vector.c
+ *
+ * Author: Connor Fletcher
+ *
+ * Date: August 06, 2026
+ *
+ * Brief: Functions performing fundamental vector operations
+ *
+ ******************************************************************************/
 
 #include "vector.h"
 
 Vector *vector_create(unsigned int size) {
-    if (size == 0) return NULL;
+    if (size == 0) {
+        printf("ERROR: Cannot create a vector with no dimensions\tvector_create\n");
+        return NULL;
+    }
+
     Vector *new_vector = calloc(1, sizeof(*new_vector));
+
+    if (new_vector == NULL) {
+        printf("ERROR: Vector allocation failed\tvector_create\n");
+        return NULL;
+    }
 
     new_vector->size = size;
 
     new_vector->data = calloc(size, sizeof(scalar_t));
+
     if (new_vector->data == NULL) {
+        printf("ERROR: Vector data allocation failed\tvector_create\n");
         free(new_vector);
         return NULL;
     }
@@ -27,68 +38,135 @@ Vector *vector_create(unsigned int size) {
     return new_vector;
 }
 
+
 void vector_destroy(Vector *vector) {
-    if (vector == NULL) return;
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tvector_destroy\n");
+        return;
+    }
 
     free(vector->data);
     free(vector);
 }
 
+
 Vector *vector_copy(const Vector *vector) {
-    if (vector == NULL) return NULL;
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tvector_copy\n");
+        return NULL;
+    }
 
     Vector *copy = vector_create(vector->size);
-    if (copy == NULL) return NULL;
 
-    for (int i = 0; i < copy->size; i++) {
+    if (copy == NULL) {
+        printf("ERROR: Vector allocation failed\tvector_copy\n");
+        return NULL;
+    }
+
+    for (unsigned int i = 0; i < copy->size; i++) {
         copy->data[i] = vector->data[i];
     }
 
     return copy;
 }
 
+
 Vector *vector_add(const Vector *first_vector, const Vector *second_vector) {
-    if (first_vector->size != second_vector->size) return NULL;
+    if (first_vector == NULL || second_vector == NULL) {
+        printf("ERROR: NULL vector passed\tvector_add\n");
+        return NULL;
+    }
+
+    if (first_vector->size != second_vector->size) {
+        printf("ERROR: Vector dimensions must match\tvector_add\n");
+        return NULL;
+    }
 
     Vector *sum = vector_create(first_vector->size);
 
-    if (sum == NULL) return NULL;
+    if (sum == NULL) {
+        printf("ERROR: Vector allocation failed\tvector_add\n");
+        return NULL;
+    }
 
-    for (int i = 0; i < sum->size; i++) {
-        sum->data[i] = first_vector->data[i] + second_vector->data[i];
+    for (unsigned int i = 0; i < sum->size; i++) {
+        sum->data[i] =
+            first_vector->data[i] +
+            second_vector->data[i];
     }
 
     return sum;
 }
 
+
 Vector *vector_subtract(const Vector *first_vector, const Vector *second_vector) {
-    if (first_vector->size != second_vector->size) return NULL;
+    if (first_vector == NULL || second_vector == NULL) {
+        printf("ERROR: NULL vector passed\tvector_subtract\n");
+        return NULL;
+    }
+
+    if (first_vector->size != second_vector->size) {
+        printf("ERROR: Vector dimensions must match\tvector_subtract\n");
+        return NULL;
+    }
 
     Vector *difference = vector_create(first_vector->size);
 
-    if (difference == NULL) return NULL;
+    if (difference == NULL) {
+        printf("ERROR: Vector allocation failed\tvector_subtract\n");
+        return NULL;
+    }
 
-    for (int i = 0; i < difference->size; i++) {
-        difference->data[i] = first_vector->data[i] - second_vector->data[i];
+    for (unsigned int i = 0; i < difference->size; i++) {
+        difference->data[i] =
+            first_vector->data[i] -
+            second_vector->data[i];
     }
 
     return difference;
 }
 
+
 scalar_t dot(const Vector *first_vector, const Vector *second_vector) {
-    if (first_vector->size != second_vector->size) return DIMENSION_ERROR;
-    scalar_t dot_product = 0;
-    for (int i = 0; i < first_vector->size; i++) {
-        dot_product += first_vector->data[i] * second_vector->data[i];
+    if (first_vector == NULL || second_vector == NULL) {
+        printf("ERROR: NULL vector passed\tdot\n");
+        return NAN;
     }
+
+    if (first_vector->size != second_vector->size) {
+        printf("ERROR: Vector dimensions must match\tdot\n");
+        return DIMENSION_ERROR;
+    }
+
+    scalar_t dot_product = 0;
+
+    for (unsigned int i = 0; i < first_vector->size; i++) {
+        dot_product +=
+            first_vector->data[i] *
+            second_vector->data[i];
+    }
+
     return dot_product;
 }
 
+
 Vector *cross(const Vector *lhs, const Vector *rhs) {
-    if (lhs->size != 3) return NULL;
-    if (rhs->size != 3) return NULL;
+    if (lhs == NULL || rhs == NULL) {
+        printf("ERROR: NULL vector passed\tcross\n");
+        return NULL;
+    }
+
+    if (lhs->size != 3 || rhs->size != 3) {
+        printf("ERROR: Cross product requires 3D vectors\tcross\n");
+        return NULL;
+    }
 
     Vector *cross_product = vector_create(VECTOR_3D);
+
+    if (cross_product == NULL) {
+        printf("ERROR: Vector allocation failed\tcross\n");
+        return NULL;
+    }
 
     cross_product->data[0] =
         lhs->data[1] * rhs->data[2] -
@@ -105,97 +183,185 @@ Vector *cross(const Vector *lhs, const Vector *rhs) {
     return cross_product;
 }
 
-scalar_t mag(const Vector *vector) {
-    scalar_t mag = 0;
 
-    for (int i = 0; i < vector->size; i++) {
-        mag += vector->data[i] * vector->data[i];
+scalar_t mag(const Vector *vector) {
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tmag\n");
+        return NAN;
     }
 
-    return sqrt(mag);
+    scalar_t magnitude_squared = 0;
+
+    for (unsigned int i = 0; i < vector->size; i++) {
+        magnitude_squared +=
+            vector->data[i] *
+            vector->data[i];
+    }
+
+    return sqrt(magnitude_squared);
 }
 
+
 Vector *norm(const Vector *vector) {
-    if (vector == NULL) return NULL;
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tnorm\n");
+        return NULL;
+    }
 
     scalar_t magnitude = mag(vector);
-    if (magnitude == 0) return NULL;
+
+    if (magnitude == 0) {
+        printf("ERROR: Cannot normalize a zero vector\tnorm\n");
+        return NULL;
+    }
 
     Vector *norm = vector_create(vector->size);
-    if (norm == NULL) return NULL;
 
-    for (int i = 0; i < norm->size; i++) {
-        norm->data[i] = vector->data[i] / magnitude;
+    if (norm == NULL) {
+        printf("ERROR: Vector allocation failed\tnorm\n");
+        return NULL;
+    }
+
+    for (unsigned int i = 0; i < norm->size; i++) {
+        norm->data[i] =
+            vector->data[i] / magnitude;
     }
 
     return norm;
 }
 
+
 Vector *proj(const Vector *vec1, const Vector *vec2) {
-    if (vec1->size != vec2->size) return NULL;
+    if (vec1 == NULL || vec2 == NULL) {
+        printf("ERROR: NULL vector passed\tproj\n");
+        return NULL;
+    }
+
+    if (vec1->size != vec2->size) {
+        printf("ERROR: Vector dimensions must match\tproj\n");
+        return NULL;
+    }
 
     scalar_t mag2 = mag(vec2);
-    if (mag2 == 0) return NULL;
+
+    if (mag2 == 0) {
+        printf("ERROR: Cannot project onto a zero vector\tproj\n");
+        return NULL;
+    }
 
     Vector *projection = vector_create(vec1->size);
-    if (projection == NULL) return NULL;
+
+    if (projection == NULL) {
+        printf("ERROR: Vector allocation failed\tproj\n");
+        return NULL;
+    }
 
     scalar_t scalar =
-        dot(vec1, vec2) / (mag2 * mag2);
+        dot(vec1, vec2) /
+        (mag2 * mag2);
 
-    for (int i = 0; i < projection->size; i++) {
-        projection->data[i] = scalar * vec2->data[i];
+    for (unsigned int i = 0; i < projection->size; i++) {
+        projection->data[i] =
+            scalar * vec2->data[i];
     }
 
     return projection;
 }
 
+
 void vector_scale(Vector *vector, scalar_t scalar) {
-    for (int i = 0; i < vector->size; i++) {
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tvector_scale\n");
+        return;
+    }
+
+    for (unsigned int i = 0; i < vector->size; i++) {
         vector->data[i] *= scalar;
     }
 }
 
+
 scalar_t rand_scalar(scalar_t min, scalar_t max) {
-    return min + ((scalar_t)rand() / RAND_MAX) * (max - min);
+    return min +
+        ((scalar_t)rand() / RAND_MAX) *
+        (max - min);
 }
 
+
 bool are_parallel(const Vector *vec1, const Vector *vec2) {
+    if (vec1 == NULL || vec2 == NULL) {
+        printf("ERROR: NULL vector passed\tare_parallel\n");
+        return false;
+    }
+
+    if (vec1->size != 3 || vec2->size != 3) {
+        printf("ERROR: Parallel check requires 3D vectors\tare_parallel\n");
+        return false;
+    }
+
     Vector *cross_product = cross(vec1, vec2);
 
-    if (cross_product == NULL) return NULL;
+    if (cross_product == NULL) {
+        return false;
+    }
 
-    for (int i = 0; i < cross_product->size; i++) {
-        if (cross_product->data[i] != 0) {
-            free(cross_product);
+    for (unsigned int i = 0; i < cross_product->size; i++) {
+        if (fabs(cross_product->data[i]) > EPSILON) {
+            vector_destroy(cross_product);
             return false;
         }
     }
 
-    free(cross_product);
+    vector_destroy(cross_product);
     return true;
 }
 
+
 bool are_orthogonal(const Vector *vec1, const Vector *vec2) {
+    if (vec1 == NULL || vec2 == NULL) {
+        printf("ERROR: NULL vector passed\tare_orthogonal\n");
+        return false;
+    }
+
+    if (vec1->size != vec2->size) {
+        printf("ERROR: Vector dimensions must match\tare_orthogonal\n");
+        return false;
+    }
+
     scalar_t dot_product = dot(vec1, vec2);
-    if (fabs(dot_product) < EPSILON) return true;
 
-    return false;
+    return fabs(dot_product) < EPSILON;
 }
 
-bool is_zero (const Vector *vector) {
-    if (mag(vector) < EPSILON) return true;
 
-    return false;
+bool is_zero(const Vector *vector) {
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tis_zero\n");
+        return false;
+    }
+
+    return mag(vector) < EPSILON;
 }
+
 
 scalar_t angle(const Vector *vec1, const Vector *vec2) {
-    if (vec1->size != vec2->size) return DIMENSION_ERROR;
+    if (vec1 == NULL || vec2 == NULL) {
+        printf("ERROR: NULL vector passed\tangle\n");
+        return NAN;
+    }
+
+    if (vec1->size != vec2->size) {
+        printf("ERROR: Vector dimensions must match\tangle\n");
+        return DIMENSION_ERROR;
+    }
 
     scalar_t mag1 = mag(vec1);
     scalar_t mag2 = mag(vec2);
 
-    if (mag1 == 0 || mag2 == 0) return NAN;
+    if (mag1 == 0 || mag2 == 0) {
+        printf("ERROR: Cannot calculate angle with zero vector\tangle\n");
+        return NAN;
+    }
 
     scalar_t phi =
         dot(vec1, vec2) /
@@ -204,6 +370,7 @@ scalar_t angle(const Vector *vec1, const Vector *vec2) {
     if (phi > 1) {
         phi = 1;
     }
+
     if (phi < -1) {
         phi = -1;
     }
@@ -211,20 +378,44 @@ scalar_t angle(const Vector *vec1, const Vector *vec2) {
     return acos(phi);
 }
 
+
 scalar_t distance(const Vector *vec1, const Vector *vec2) {
-    if (vec1->size != vec2->size) return DIMENSION_ERROR;
+    if (vec1 == NULL || vec2 == NULL) {
+        printf("ERROR: NULL vector passed\tdistance\n");
+        return NAN;
+    }
+
+    if (vec1->size != vec2->size) {
+        printf("ERROR: Vector dimensions must match\tdistance\n");
+        return DIMENSION_ERROR;
+    }
+
     scalar_t distance_squared = 0;
 
-    for (int i = 0; i < vec1->size; i++) {
-        distance_squared += (vec1->data[i] - vec2->data[i]) * (vec1->data[i] - vec2->data[i]);
+    for (unsigned int i = 0; i < vec1->size; i++) {
+        scalar_t difference =
+            vec1->data[i] -
+            vec2->data[i];
+
+        distance_squared += difference * difference;
     }
 
     return sqrt(distance_squared);
 }
 
-// for now built as if I will pass appropriate number of values
+
 void vector_set(Vector *vector, const scalar_t *values) {
-    for (int i = 0; i < vector->size; i++) {
+    if (vector == NULL) {
+        printf("ERROR: NULL vector passed\tvector_set\n");
+        return;
+    }
+
+    if (values == NULL) {
+        printf("ERROR: NULL values passed\tvector_set\n");
+        return;
+    }
+
+    for (unsigned int i = 0; i < vector->size; i++) {
         vector->data[i] = values[i];
     }
 }
