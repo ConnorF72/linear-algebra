@@ -115,4 +115,34 @@ Matrix *matrix_multiply(const Matrix *lhs, const Matrix *rhs);
  * @return Augemented matrix
  */
 Matrix *create_augmented(const Matrix *lhs, const Matrix *rhs);
+
+/**
+ * @brief Add a number to every element of a row in a matrix
+ *
+ * @param *matrix Matrix to be added to
+ * @param row Row to be added to; index position starting at 1
+ * @param num Number to add to row
+ */
+void matrix_row_add(Matrix *matrix, unsigned int row, scalar_t num);
+
+/**
+ * @brief Scale every element in a row of a matrix by a given value
+ *
+ * @param *matrix Matrix with row being scaled
+ * @param row Row to be scaled; index position starting at 1
+ * @param scalar Number to scale row by
+ */
+void scale_row(Matrix *matrix, unsigned int row, scalar_t scalar);
+
+/**
+ * @brief Swap two rows of a matrix
+ *
+ * @param *matrix Matrix whose rows are being swapped
+ * @param row1 First row; index position starting at 1
+ * @param row2 Second row; index position starting at 1
+ */
+void swap_rows(Matrix *matrix, unsigned int row1, unsigned int row2);
+
+Matrix *rref(const Matrix *matrix);
+
 #endif

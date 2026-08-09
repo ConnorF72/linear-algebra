@@ -1,14 +1,14 @@
-/******************************************************************************
- *
- * File: vector.c
- *
- * Author: Connor Fletcher
- *
- * Date: August 06, 2026
- *
- * Brief: Functions performing fundamental vector operations
- *
- ******************************************************************************/
+/****************************************
+
+  File: vector.c
+
+  Author: Connor Fletcher
+
+  Date: August 06, 2026
+
+  Brief: Functions performing fundamental vector operations
+
+ ****************************************/
 
 #include "vector.h"
 
@@ -287,6 +287,9 @@ scalar_t rand_scalar(scalar_t min, scalar_t max) {
         (max - min);
 }
 
+unsigned int rand_uint(unsigned int min, unsigned int max) {
+    return (rand() % (max - min + 1)) + min; // don't know if needed yet; might delete
+}
 
 bool are_parallel(const Vector *vec1, const Vector *vec2) {
     if (vec1 == NULL || vec2 == NULL) {

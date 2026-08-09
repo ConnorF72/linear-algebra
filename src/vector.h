@@ -129,6 +129,16 @@ void vector_scale(Vector *vector, scalar_t scalar);
 scalar_t rand_scalar(scalar_t min, scalar_t max);
 
 /**
+ * @brief Generates a random unsigned integer
+ *
+ * @param min Minimum value
+ * @param max Maximum value
+ *
+ * @return Random unsigned integer
+ */
+unsigned int rand_uint(unsigned int min, unsigned int max);
+
+/**
  * @brief Determines if two are parallel
  *
  * @param *vec1 First vector
