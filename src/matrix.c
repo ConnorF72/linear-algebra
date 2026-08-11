@@ -12,7 +12,7 @@
 
 #include "matrix.h"
 
-Matrix *matrix_create(unsigned int rows, unsigned int cols) {
+Matrix *create_matrix(unsigned int rows, unsigned int cols) {
     if (rows == 0 || cols == 0) {
         printf("ERROR: Cannot create matrix withouts rows/cols\n");
         return NULL;
@@ -50,7 +50,7 @@ Matrix *matrix_create(unsigned int rows, unsigned int cols) {
     return matrix;
 }
 
-void matrix_destroy(Matrix *matrix) {
+void destroy_matrix(Matrix *matrix) {
     if (matrix == NULL) return;
 
     for (int row = 0; row < matrix->rows; row++) {
@@ -63,7 +63,7 @@ void matrix_destroy(Matrix *matrix) {
 }
 
 Matrix *eye(unsigned int size) {
-    Matrix *matrix = matrix_create(size, size);
+    Matrix *matrix = create_matrix(size, size);
     if (matrix == NULL) return NULL;
 
     for (int row = 0; row < matrix->rows; row++) {
@@ -73,8 +73,8 @@ Matrix *eye(unsigned int size) {
     return matrix;
 }
 
-Matrix *matrix_random(unsigned int rows, unsigned int cols, scalar_t min, scalar_t max) {
-    Matrix *matrix = matrix_create(rows, cols);
+Matrix *random_matrix(unsigned int rows, unsigned int cols, scalar_t min, scalar_t max) {
+    Matrix *matrix = create_matrix(rows, cols);
 
     for (int row = 0; row < matrix->rows; row++) {
         for (int col = 0; col < matrix->cols; col++) {
@@ -85,7 +85,7 @@ Matrix *matrix_random(unsigned int rows, unsigned int cols, scalar_t min, scalar
     return matrix;
 }
 
-void matrix_print(const Matrix *matrix, unsigned int precision) {
+void print_matrix(const Matrix *matrix, unsigned int precision) {
     if (matrix == NULL) {
         printf("ERROR: NULL matrix passed\tmatrix_print\n");
         return;
@@ -98,14 +98,14 @@ void matrix_print(const Matrix *matrix, unsigned int precision) {
     }
 }
 
-Matrix *matrix_add(const Matrix *lhs, const Matrix *rhs) {
+Matrix *add_matrices(const Matrix *lhs, const Matrix *rhs) {
     if (lhs == NULL || rhs == NULL) {
         printf("ERROR: NULL matrix passed\tmatrix_add\n");
         return NULL;
     }
     if (lhs->rows != rhs->rows || lhs->cols != rhs->cols) return NULL;
 
-    Matrix *result = matrix_create(lhs->rows, lhs->cols);
+    Matrix *result = create_matrix(lhs->rows, lhs->cols);
 
     for (int row = 0; row < result->rows; row++) {
         for (int col = 0; col < result->cols; col++) {
@@ -116,14 +116,14 @@ Matrix *matrix_add(const Matrix *lhs, const Matrix *rhs) {
     return result;
 }
 
-Matrix *matrix_subtract(const Matrix *lhs, const Matrix *rhs) {
+Matrix *subtract_matrices(const Matrix *lhs, const Matrix *rhs) {
     if (lhs == NULL || rhs == NULL) {
         printf("ERROR: NULL matrix passed\tmatrix_subtract\n");
         return NULL;
     }
     if (lhs->rows != rhs->rows || lhs->cols != rhs->cols) return NULL;
 
-    Matrix *result = matrix_create(lhs->rows, lhs->cols);
+    Matrix *result = create_matrix(lhs->rows, lhs->cols);
 
     for (int row = 0; row < result->rows; row++) {
         for (int col = 0; col < result->cols; col++) {
@@ -134,12 +134,12 @@ Matrix *matrix_subtract(const Matrix *lhs, const Matrix *rhs) {
     return result;
 }
 
-Matrix *matrix_copy(const Matrix *matrix) {
+Matrix *copy_matrix(const Matrix *matrix) {
     if (matrix == NULL) {
         printf("ERROR: NULL matrix passed\tmatrix_copy\n");
         return NULL;
     }
-    Matrix *copy = matrix_create(matrix->rows, matrix->cols);
+    Matrix *copy = create_matrix(matrix->rows, matrix->cols);
 
     for (int row = 0; row < matrix->rows; row++) {
         for (int col = 0; col < matrix->cols; col++) {
@@ -155,7 +155,7 @@ Matrix *transpose(const Matrix *matrix) {
         printf("ERROR: NULL matrix passed\ttranspose\n");
         return NULL;
     }
-    Matrix *transpose = matrix_create(matrix->cols, matrix->rows);
+    Matrix *transpose = create_matrix(matrix->cols, matrix->rows);
 
     for (int row = 0; row < transpose->rows; row++) {
         for (int col = 0; col < transpose->cols; col++) {
@@ -166,12 +166,12 @@ Matrix *transpose(const Matrix *matrix) {
     return transpose;
 }
 
-Matrix *matrix_multiply(const Matrix *lhs, const Matrix *rhs) {
+Matrix *multiply_matrices(const Matrix *lhs, const Matrix *rhs) {
     if (lhs->cols != rhs->rows) {
         printf("ERROR: NULL matrix passed.\tmatrix_multiply");
         return NULL;
     }
-    Matrix *product = matrix_create(lhs->rows, rhs->cols);
+    Matrix *product = create_matrix(lhs->rows, rhs->cols);
 
     for (int i = 0; i < lhs->rows; i++) {
         for (int j = 0; j < rhs->cols; j++) {
@@ -190,7 +190,7 @@ Matrix *create_augmented(const Matrix *lhs, const Matrix *rhs) {
         return NULL;
     }
 
-    Matrix *augmented = matrix_create(lhs->rows, (lhs->cols)+(rhs->cols));
+    Matrix *augmented = create_matrix(lhs->rows, (lhs->cols)+(rhs->cols));
     if (augmented == NULL) return NULL;
 
     for (int row = 0; row < lhs->rows; row++) {
@@ -207,30 +207,62 @@ Matrix *create_augmented(const Matrix *lhs, const Matrix *rhs) {
 
     return augmented;
 }
-
-void matrix_row_add(Matrix *matrix, unsigned int row, scalar_t num) { //pass actual row index, not array index position
-    if (matrix == NULL) {
-        printf("ERROR: NULL matrix passed\tmatrix_row_add\n");
-        return;
+int add_matrix_rows(Matrix *matrix, unsigned int target_row, unsigned int source_row, scalar_t multiplier) {
+    if (target_row >= matrix->rows || source_row >= matrix->rows) {
+        return 0;
     }
-    if (row > matrix->rows || row == 0) {
-        printf("ERROR: Invalid number of rows\tmatrix_row_add\n");
-        return;
-    }
-
-    if (isnan(num)) {
-        printf("ERROR: NAN passed\tmatrix_row_add\n");
-        return;
-    }
-
-    unsigned int row_index = row - 1; //for proper array indexing
 
     for (int i = 0; i < matrix->cols; i++) {
-        matrix->data[row_index][i] += num;
+        matrix->data[target_row][i] += matrix->data[source_row][i] * multiplier;
     }
+    return 1;
 }
 
-void scale_row(Matrix *matrix, unsigned int row, scalar_t scalar) {
+int scale_matrix(Matrix *matrix, scalar_t scalar) {
+    if (matrix == NULL) return 0;
+
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int col = 0; col < matrix->cols; col++) {
+            matrix->data[row][col] *= scalar;
+        }
+    }
+    return 1;
+}
+
+Matrix *remove_column(Matrix *matrix, unsigned int column) {
+    if (column >= matrix->cols) return NULL;
+
+    Matrix *removed = create_matrix(matrix->rows, matrix->cols - 1);
+    if (removed == NULL) return NULL;
+
+    for (int row = 0; row < matrix->rows; row++) {
+        for (int col = 0; col < matrix->cols; col++) {
+            if (col != column) {
+                removed->data[row][col] = matrix->data[row][col];
+            }
+        }
+    }
+   return removed;
+}
+
+Matrix *remove_row(Matrix *matrix, unsigned int target_row) {
+    if (target_row >= matrix->rows) return NULL;
+
+    Matrix *removed = create_matrix(matrix->rows - 1, matrix->cols);
+    if (removed == NULL) return NULL;
+
+    for (int row = 0, dest = 0; row < matrix->rows; row++) {
+        if (row != target_row) {
+            for (int col = 0; col < matrix->cols; col++) {
+                removed->data[dest][col] = matrix->data[row][col];
+            }
+            dest++;
+        }
+    }
+    return removed;
+}
+
+void scale_row(Matrix *matrix, unsigned int row, scalar_t scalar) { //To do: figure out standard error procedure
     if (matrix == NULL) {
         printf("ERROR: NULL matrix passed\tmatrix_row_add\n");
         return;
@@ -245,58 +277,52 @@ void scale_row(Matrix *matrix, unsigned int row, scalar_t scalar) {
         return;
     }
 
-    unsigned int row_index = row - 1;
-
     for (int i = 0; i < matrix->cols; i++) {
-        matrix->data[row_index][i] *= scalar;
+        matrix->data[row][i] *= scalar;
     }
 }
 
-void swap_rows(Matrix *matrix, unsigned int row1, unsigned int row2) {
-    if (matrix == NULL) {
-        printf("ERROR: NULL matrix passed\tswap_rows\n");
-        return;
-    }
+int swap_rows(Matrix *matrix, unsigned int row1, unsigned int row2) {
+    if (row1 >= matrix->rows || row2 >= matrix->rows) return 0;
 
-    if (matrix->data == NULL) {
-        printf("ERROR: NULL data passed\tswap_rows\n");
-        return;
-    }
+    scalar_t *temp = matrix->data[row1];
+    matrix->data[row1] = matrix->data[row2];
+    matrix->data[row2] = temp;
 
-    if (row1 > matrix->rows || row2 > matrix->rows) {
-        printf("ERROR: Invalid row index\t\tswap_rows\n");
-        return;
-    }
-
-    if (row1 == row2) {
-        printf("ERROR: Cannot swap rows:\t\tswap_rows\n");
-        return;
-    }
-
-    if (row1 == 0 || row2 == 0) {
-        return;
-    }
-
-    unsigned int row1_index = row1 - 1;
-    unsigned int row2_index = row2 - 1;
-
-    scalar_t *temp = matrix->data[row1_index];
-    matrix->data[row1_index] = matrix->data[row2_index];
-    matrix->data[row2_index] = temp;
+    return 1;
 }
 
-//to do
-Matrix *rref(const Matrix *matrix) {
-    if (matrix == NULL) {
-        printf("ERROR: NULL matrix passed\trref\n");
-        return NULL;
-    }
-    Matrix *reduced = matrix_copy(matrix);
-    if (reduced == NULL) {
-        printf("ERROR: Matrix allocation failed\trref\n");
-        return NULL;
-    }
+int swap_cols(Matrix *matrix, unsigned int col1, unsigned int col2) {
+    if (col1 >= matrix->cols || col2 >= matrix->cols) return 0;
 
+    scalar_t temp;
+    for (int row = 0; row < matrix->rows; row++) {
+        temp = matrix->data[row][col1];
+        matrix->data[row][col1] = matrix->data[row][col2];
+        matrix->data[row][col2] = temp;
+    }
+    return 1;
+}
 
-    return reduced;
+int find_pivot(const Matrix *matrix, unsigned int row, unsigned int col){
+    for (int i = 0; i < matrix->rows; i++) {
+        if (fabs(matrix->data[i][col]) > EPSILON) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int find_pivot_max(const Matrix *matrix, unsigned int row, unsigned int col) {
+    int max_index = row;
+    scalar_t max_value = fabs(matrix->data[row][col]);
+
+    for (int i = row + 1; i < matrix->rows; i++) {
+        scalar_t current_value = fabs(matrix->data[i][col]);
+        if (current_value > max_value) {
+            max_value = current_value;
+            max_index = i;
+        }
+    }
+    return (max_value > EPSILON) ? max_index: -1;
 }
