@@ -150,6 +150,10 @@ Matrix *copy_matrix(const Matrix *matrix) {
     return copy;
 }
 
+void matcopy(const Matrix *source_matrix, Matrix *copy) {
+
+}
+
 Matrix *transpose(const Matrix *matrix) {
     if (matrix == NULL) {
         printf("ERROR: NULL matrix passed\ttranspose\n");
@@ -325,4 +329,54 @@ int find_pivot_max(const Matrix *matrix, unsigned int row, unsigned int col) {
         }
     }
     return (max_value > EPSILON) ? max_index: -1;
+}
+
+Matrix *matrix_fromfile(FILE *f) {
+    unsigned int num_rows = 0, num_cols = 0;
+
+    if (fscanf(f, "%u %u", &num_rows, &num_cols) != 2) {
+        printf("ERROR: Improper dimensions in file\n");
+        return NULL;
+    }
+
+    Matrix *read = create_matrix(num_rows, num_cols);
+    if (read == NULL) return NULL;
+
+    for (int row = 0; row < num_rows; row++) {
+        for (int col = 0; col < num_cols; col++) {
+            if (fscanf(f, "%lf", &read->data[row][col]) != 1) {
+                printf("ERROR: Format error in file\n");
+                destroy_matrix(read);
+                return NULL;
+            }
+        }
+    }
+    return read;
+}
+
+Matrix *vertical_concat(unsigned int matrix_num, Matrix **matrix_array) {
+    if (matrix_num == 0) return NULL;
+    if (matrix_num == 1) return copy_matrix(matrix_array[0]);
+
+    unsigned int total_rows = 0;
+    unsigned int total_cols = matrix_array[0]->cols;
+
+    for (int i = 0; i < matrix_num; i++) {
+        if (matrix_array[i] == NULL) return NULL;
+        if (total_cols != matrix_array[i]->cols) return NULL;
+        total_rows += matrix_array[i]->rows;
+    }
+
+    Matrix *concat = create_matrix(total_rows, total_cols);
+    if (concat == NULL) return NULL;
+
+    unsigned int current_row = 0;
+    for (int i = 0; i < matrix_num; i++) {
+        for (int j = 0; j < matrix_array[i]->rows; j++) {
+            //implement once new memcopy() is running
+            current_row++;
+        }
+    }
+
+    return concat;
 }

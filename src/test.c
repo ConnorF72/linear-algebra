@@ -9,21 +9,28 @@
 #define MIN 1
 
 int main(void) {
+    /*
+    FILE *file = fopen("matrix_from_file.txt", "r");
+
+    if (file == NULL) {
+        printf("ERROR ACCESSING FILE\n");
+        exit(1);
+    }
+    */
 
     srand(time(NULL));
 
-    Matrix *matrix1 = matrix_random(3, 3, MIN, MAX);
+    Matrix *m1 = random_matrix(3, 3, MIN, MAX);
+    Matrix *m2 = random_matrix(3, 3, MIN, MAX);
 
-    printf("\n\n===== MATRIX =====\n\n");
-    matrix_print(matrix1, 0);
+    Matrix *arr[64] = {m1, m2};
 
-    Matrix *matrix2 = remove_row(matrix1, 1);
+    Matrix *m3 = vertical_concat(2, arr);
 
-    printf("\n\n===== REMOVE ROW =====\n\n");
-    matrix_print(matrix2, 0);
+    print_matrix(m3, 0);
 
-    matrix_destroy(matrix1);
-    matrix_destroy(matrix2);
-
+    destroy_matrix(m1);
+    destroy_matrix(m2);
+    destroy_matrix(m3);
     return 0;
 }

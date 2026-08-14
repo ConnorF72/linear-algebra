@@ -211,6 +211,17 @@ int find_pivot(const Matrix *matrix, unsigned int row, unsigned int col);
  */
 int find_pivot_max(const Matrix *matrix, unsigned int row, unsigned int col);
 
-Matrix *rref(const Matrix *matrix);
+/**
+ * @brief Creates a new matrix from a file
+ *
+ * @param *f File to be read from. Formatting should be two unsigned ints for rows and columns
+ *           followed by the appropriate number of elements for the matrix of the given dimensions
+ *
+ * @return Created matrix
+ */
+Matrix *matrix_fromfile(FILE *f);
+
+
+Matrix *vertical_concat(unsigned int matrix_num, Matrix **matrix_array);
 
 #endif
